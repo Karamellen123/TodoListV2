@@ -12,7 +12,7 @@ TasksUndone.Add("Coding", 2);
 TasksUndone.Add("Food", 5);
 TasksUndone.Add("Pommes", 3);
 TasksUndone.Add("Chocolate", 8);
-TasksUndone.Add("Bottle", 4);
+TasksUndone.Add("Paint", 4);
 
 //LoadTasksFromFile("tasks.txt"); // Load tasks from file when the program starts
 MainMenu();
