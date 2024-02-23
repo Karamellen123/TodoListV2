@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-//List<string> TaskName = new List<string>();
-//List<int> TaskDate = new List<int>();
-//List<bool> isTaskCompleted = new List<bool>();
 List<TaskUndone> Uncompleted = new List<TaskUndone>();
-List<TaskCompleted> CompletedList = new List<TaskCompleted>();
-
-//Dictionary<string, int> TasksUndone = new Dictionary<string, int>();
-//Dictionary<string, int> TasksCompleted = new Dictionary<string, int>();
+List<TaskUndone> CompletedList = new List<TaskUndone>();
 
 //Adding random numbers so it won't be empty the first time (mainly used for debugging)
 Uncompleted.Add(new TaskUndone("-.-", 9));
@@ -23,7 +17,8 @@ Uncompleted.Add(new TaskUndone("Paint", 4));
 MainMenu();
 
 void AddTaskToList()
-{ 
+{
+    Console.WriteLine("Add a task to your todo list");
     string answer = "";
     int date;
     Console.WriteLine("Please enter a task:");
@@ -38,9 +33,9 @@ void AddTaskToList()
 
 }
 
-//Changes date at a position in the dictionary.
 void ChangeDate()   
 {
+    Console.WriteLine("Change deadline");
     int selected;
     int newDate;
     Console.WriteLine("Which task would you like to change the date on? ");
@@ -59,11 +54,6 @@ void ChangeDate()
     //Change selected valuse to new date
     Uncompleted[selected].Deadline = newDate;
 
-    /*
-    int selectedTask = Uncompleted[selected].Deadline;
-    Uncompleted[selectedTask] = newDate;
-    */
-
     //Displays the new date to user
     Console.WriteLine("The Task: " + Uncompleted[selected].Name + " have changed it's deadline to: " + Uncompleted[selected].Deadline);
 
@@ -79,36 +69,24 @@ void ShowTaskList()
     // Displays the task list
     for (int i = 0; i < Uncompleted.Count; i++)
     {
-        //Console.WriteLine(i + ") Task name:" + TaskName[i] + ", current date: " + TaskDate[i] + ", status: " + isTaskCompleted[i]);
         Console.WriteLine(i + ") Task name: " + Uncompleted[i].Name + ", current date: " + Uncompleted[i].Deadline);
     }
     Console.WriteLine("___________________________________________________");
     Console.WriteLine("Completed tasks:");
     for (int i = 0; i < CompletedList.Count; i++)
     {
-        //Console.WriteLine(i + ") Task name:" + TaskName[i] + ", current date: " + TaskDate[i] + ", status: " + isTaskCompleted[i]);
         Console.WriteLine(i + ") Task name: " + CompletedList[i].Name + ", current date: " + CompletedList[i].Deadline);
     }
 
     Console.ReadKey();
-    // return to main menu
     MainMenu();
 
 }
-void ViewUncompletedListbyName()
-{
-    //var sortedValue = TasksUndone.Values.OrderBy(value => value).ToList();
-    var sortedTasks = Uncompleted.OrderBy(task => task.Name).ToList(); 
-    foreach (var task in sortedTasks)
-    {
-        Console.WriteLine("Task: " + task.Name + ", Deadline: " + task.Deadline);
-    }
-    Console.ReadKey();
-    MainMenu();
-}
+
 
 void SortListByDate()
 {
+    Console.WriteLine("Sorter list by date");
     var sortedTasks = Uncompleted.OrderBy(task => task.Deadline).ToList();
     foreach (var task in sortedTasks)
     {
@@ -122,23 +100,21 @@ void SortListByDate()
 void MainMenu()
 {
     Console.Clear();
+    Console.WriteLine("Main Menu");
     Console.WriteLine("Welcome to Todo List! \nYou have " + Uncompleted.Count + " tasks to do and " + Uncompleted.Count + " completed. \nPick an option: ");
     Console.WriteLine("1) View todo list");
     Console.WriteLine("2) Add Task to your todo list");
-    Console.WriteLine("3) change date \n4) Mark Task as done");
+    Console.WriteLine("3) change date \n4) Edit task name \n5) Mark Task as done \n6) Remove task");
 
     string answer = "";
     answer = Console.ReadLine();
 
-    if (answer == "1") 
-    { 
-        //ViewUncompletedListbyName();
-        ShowTaskList();
-    }
-    else if (answer == "2") { AddTaskToList(); }
+    if (answer == "1")      { ShowTaskList();}
+    else if (answer == "2") { AddTaskToList();}
     else if (answer == "3") { ChangeDate(); }
-    else if(answer == "4") { TaskIsCompleted(); }
-    else if(answer == "5") { RemoveTask(); }
+    else if(answer == "4") { EditTaskName(); }
+    else if(answer == "5") { TaskIsCompleted();}
+    else if(answer == "6") { RemoveTask(); }
    // else if(answer == "4") { sortListbyName(); }
     else { Console.WriteLine("temp"); }
 
@@ -146,6 +122,7 @@ void MainMenu()
 
 void TaskIsCompleted()
 {
+    Console.WriteLine("Mark task as done");
     var sortedUncompletedTasks = Uncompleted.OrderBy(task => task.Deadline).ToList();
     for (int i = 0; i < sortedUncompletedTasks.Count; i++)
     {
@@ -153,7 +130,7 @@ void TaskIsCompleted()
     }
     Console.WriteLine("Enter the number of the completed task: ");
     int answer = Convert.ToInt32(Console.ReadLine());
-    CompletedList.Add(new TaskCompleted(sortedUncompletedTasks[answer].Name, sortedUncompletedTasks[answer].Deadline));
+    CompletedList.Add(new TaskUndone(sortedUncompletedTasks[answer].Name, sortedUncompletedTasks[answer].Deadline));
     Uncompleted.Remove(sortedUncompletedTasks[answer]); // Remove directly from sorted list
 
     var sortedCompletedTasks = CompletedList.OrderBy(task => task.Deadline).ToList();
@@ -178,7 +155,7 @@ void RemoveTask()
     {
         Console.WriteLine(i + ") Task: " + sortedUncompletedTasks[i].Name + ", Deadline: " + sortedUncompletedTasks[i].Deadline);
     }
-    Console.WriteLine("Enter the number of the task you would like to change: ");
+    Console.WriteLine("Enter the number of the task you would like to remove: ");
     int answer = Convert.ToInt32(Console.ReadLine());
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine("The  following task will be removed:");
@@ -188,14 +165,26 @@ void RemoveTask()
     Console.ReadKey();
     MainMenu();
 }
+void EditTaskName()
+{
+    var sortedUncompletedTasks = Uncompleted.OrderBy(task => task.Deadline).ToList();
+    for (int i = 0; i < sortedUncompletedTasks.Count; i++)
+    {
+        Console.WriteLine(i + ") Task: " + sortedUncompletedTasks[i].Name + ", Deadline: " + sortedUncompletedTasks[i].Deadline);
+    }
+    Console.WriteLine("Enter the number of the task you would like to change: ");
+    int answer = Convert.ToInt32(Console.ReadLine());
+    //Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("Enter a new name for that task: ");
+    string newName = Console.ReadLine();
+    Uncompleted[answer].Name = newName;
+    Console.WriteLine(answer + ") Task: " + sortedUncompletedTasks[answer].Name + ", Deadline: " + sortedUncompletedTasks[answer].Deadline);
+    Console.ReadKey();
 
-
-
-
-
+    
+}
 
 class TaskUndone 
-
 {
     public TaskUndone(string name, int deadline)
     {
@@ -205,17 +194,6 @@ class TaskUndone
     public string Name { get; set; }
     public int Deadline { get; set; }
 
-}
-
-class TaskCompleted
-{
-    public TaskCompleted(string name, int deadline)
-    {
-        Name = name;
-        Deadline = deadline;
-    }
-    public string Name { get; set; }
-    public int Deadline { get; set; }
 }
 
 /*
