@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 
 //List<string> TaskName = new List<string>();
 //List<int> TaskDate = new List<int>();
-List<bool> isTaskCompleted = new List<bool>();
-
+//List<bool> isTaskCompleted = new List<bool>();
 List<TaskUndone> Uncompleted = new List<TaskUndone>();
 List<TaskCompleted> CompletedList = new List<TaskCompleted>();
-
 
 //Dictionary<string, int> TasksUndone = new Dictionary<string, int>();
 //Dictionary<string, int> TasksCompleted = new Dictionary<string, int>();
@@ -84,6 +82,14 @@ void ShowTaskList()
         //Console.WriteLine(i + ") Task name:" + TaskName[i] + ", current date: " + TaskDate[i] + ", status: " + isTaskCompleted[i]);
         Console.WriteLine(i + ") Task name: " + Uncompleted[i].Name + ", current date: " + Uncompleted[i].Deadline);
     }
+    Console.WriteLine("___________________________________________________");
+    Console.WriteLine("Completed tasks:");
+    for (int i = 0; i < CompletedList.Count; i++)
+    {
+        //Console.WriteLine(i + ") Task name:" + TaskName[i] + ", current date: " + TaskDate[i] + ", status: " + isTaskCompleted[i]);
+        Console.WriteLine(i + ") Task name: " + CompletedList[i].Name + ", current date: " + CompletedList[i].Deadline);
+    }
+
     Console.ReadKey();
     // return to main menu
     MainMenu();
@@ -124,10 +130,15 @@ void MainMenu()
     string answer = "";
     answer = Console.ReadLine();
 
-    if (answer == "1") { ViewUncompletedListbyName(); }
+    if (answer == "1") 
+    { 
+        //ViewUncompletedListbyName();
+        ShowTaskList();
+    }
     else if (answer == "2") { AddTaskToList(); }
     else if (answer == "3") { ChangeDate(); }
     else if(answer == "4") { TaskIsCompleted(); }
+    else if(answer == "5") { RemoveTask(); }
    // else if(answer == "4") { sortListbyName(); }
     else { Console.WriteLine("temp"); }
 
@@ -159,6 +170,29 @@ void TaskIsCompleted()
     Console.ReadKey();
 
 }
+
+void RemoveTask()
+{
+    var sortedUncompletedTasks = Uncompleted.OrderBy(task => task.Deadline).ToList();
+    for (int i = 0; i < sortedUncompletedTasks.Count; i++)
+    {
+        Console.WriteLine(i + ") Task: " + sortedUncompletedTasks[i].Name + ", Deadline: " + sortedUncompletedTasks[i].Deadline);
+    }
+    Console.WriteLine("Enter the number of the task you would like to change: ");
+    int answer = Convert.ToInt32(Console.ReadLine());
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("The  following task will be removed:");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine(answer + ") Task: " + sortedUncompletedTasks[answer].Name + ", Deadline: " + sortedUncompletedTasks[answer].Deadline);
+    Uncompleted.Remove(sortedUncompletedTasks[answer]); // Remove directly from sorted list
+    Console.ReadKey();
+    MainMenu();
+}
+
+
+
+
+
 
 class TaskUndone 
 
