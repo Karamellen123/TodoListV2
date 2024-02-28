@@ -1,17 +1,23 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 List<TaskUndone> Uncompleted = new List<TaskUndone>();
 List<TaskUndone> CompletedList = new List<TaskUndone>();
 
 //Adding random numbers so it won't be empty the first time (mainly used for debugging)
-Uncompleted.Add(new TaskUndone("-.-", 9));
-Uncompleted.Add(new TaskUndone("Coding", 2));
-Uncompleted.Add(new TaskUndone("Food", 5));
-Uncompleted.Add(new TaskUndone("Pommes", 3));
-Uncompleted.Add(new TaskUndone("Chocolate", 8));
-Uncompleted.Add(new TaskUndone("Paint", 4));
+DateTime date_1 = new DateTime(2024, 2, 25);
+DateTime date_2 = new DateTime(2026, 5, 5);
+DateTime date_3 = new DateTime(2024, 3, 20);
+DateTime date_4 = new DateTime(2024, 12, 14);
+
+Uncompleted.Add(new TaskUndone("-.-", date_1));
+Uncompleted.Add(new TaskUndone("Coding",date_2));
+Uncompleted.Add(new TaskUndone("Food", date_3));
+Uncompleted.Add(new TaskUndone("Pommes", date_4));
+Uncompleted.Add(new TaskUndone("Chocolate", date_1));
+Uncompleted.Add(new TaskUndone("Paint", date_2));
 
 //LoadTasksFromFile("tasks.txt"); // Load tasks from file when the program starts
 MainMenu();
@@ -20,12 +26,13 @@ void AddTaskToList()
 {
     Console.WriteLine("Add a task to your todo list");
     string answer = "";
-    int date;
+    DateTime date;
     Console.WriteLine("Please enter a task:");
     answer = Console.ReadLine();
 
-    Console.WriteLine("Enter a deadline: ");
-    date = Convert.ToInt32(Console.ReadLine());
+    Console.WriteLine("Enter a deadline (MM/dd/yyyy): ");
+    date = Convert.ToDateTime(Console.ReadLine()); 
+
 
     Uncompleted.Add(new TaskUndone(answer, date));
     // return to Main Menu
@@ -37,7 +44,7 @@ void ChangeDate()
 {
     Console.WriteLine("Change deadline");
     int selected;
-    int newDate;
+    DateTime newDate;
     Console.WriteLine("Which task would you like to change the date on? ");
 
     //Lists the tasks so user can choose which task they want to change
@@ -49,7 +56,8 @@ void ChangeDate()
     selected = Convert.ToInt32(Console.ReadLine());
 
     Console.WriteLine("What would you like to change it to? ");
-    newDate = Convert.ToInt32(Console.ReadLine());
+    Console.WriteLine("Enter a deadline (MM/dd/yyyy): ");
+    newDate = Convert.ToDateTime(Console.ReadLine());
 
     //Change selected valuse to new date
     Uncompleted[selected].Deadline = newDate;
@@ -108,16 +116,18 @@ void MainMenu()
 
     string answer = "";
     answer = Console.ReadLine();
+    if(answer != null)
+    {
+        if (answer == "1") { ShowTaskList(); }
+        else if (answer == "2") { AddTaskToList(); }
+        else if (answer == "3") { ChangeDate(); }
+        else if (answer == "4") { EditTaskName(); }
+        else if (answer == "5") { TaskIsCompleted(); }
+        else if (answer == "6") { RemoveTask(); }
+        // else if(answer == "4") { sortListbyName(); }
+        else { Console.WriteLine("temp"); }
 
-    if (answer == "1")      { ShowTaskList();}
-    else if (answer == "2") { AddTaskToList();}
-    else if (answer == "3") { ChangeDate(); }
-    else if(answer == "4") { EditTaskName(); }
-    else if(answer == "5") { TaskIsCompleted();}
-    else if(answer == "6") { RemoveTask(); }
-   // else if(answer == "4") { sortListbyName(); }
-    else { Console.WriteLine("temp"); }
-
+    }
 }
 
 void TaskIsCompleted()
@@ -186,13 +196,13 @@ void EditTaskName()
 
 class TaskUndone 
 {
-    public TaskUndone(string name, int deadline)
+    public TaskUndone(string name, DateTime deadline)
     {
         Name = name;
         Deadline = deadline;
     }
     public string Name { get; set; }
-    public int Deadline { get; set; }
+    public DateTime Deadline { get; set; }
 
 }
 
